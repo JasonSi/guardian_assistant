@@ -13,7 +13,7 @@
     ],
     "content_scripts": [{
         "matches": ["http://www.theguardian.com/*", "https://www.theguardian.com/*"],
-        "js": ["js/filter.js"],
+        "js": ["js/app.js"],
         "css": ["css/index.css"],
         "run_at": "document_end",
         "all_frame": true

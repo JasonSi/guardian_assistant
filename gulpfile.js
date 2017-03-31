@@ -7,10 +7,12 @@ var gulp = require('gulp'),
     del = require('del'),
     svg2png = require('gulp-svg2png'),
     stylish = require('jshint-stylish'),
+    minifyCSS = require('gulp-minify-css'),
     watch = require('gulp-watch');
 
 gulp.task('js', function() {
-    return gulp.src('./src/js/*.js')
+    return gulp.src(['./src/js/filter.js','./src/js/pagination.js'])
+      .pipe(concat('app.js'))
       .pipe(babel({presets: ['es2015']}))
       .pipe(uglify())
       .pipe(gulp.dest('./dist/js/'));
@@ -19,6 +21,7 @@ gulp.task('scss', function() {
     return gulp.src('./src/scss/*.scss')
     .pipe(concat('index.css'))
     .pipe(sass())
+    .pipe(minifyCSS())
     .pipe(gulp.dest('./dist/css/'));
 });
 gulp.task('img', function() {

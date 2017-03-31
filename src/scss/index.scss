@@ -1,5 +1,13 @@
-.pure-content{
-  padding: 0 30px;
-  max-width: 600px;
-  margin: 0 auto;
+#top{
+  .pure-container{
+    // height: 500px;
+    // overflow: hidden;
+    position: relative;
+
+    .pure-content{
+      padding: 0 30px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
 }
