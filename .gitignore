@@ -1,0 +1,8 @@
+# destination folder
+/dist/
+
+ # node things
+/node_modules/
+
+# macOS thingy
+.DS_Store
