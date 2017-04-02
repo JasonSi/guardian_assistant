@@ -34,29 +34,29 @@
     let jpage = new JPage(btnContainer, calcPageCount());
 
     jpage.onchange((num) => {
-        console.log('onchange');
         let viewHeight = calcViewHeight();
         document.body.scrollTop = (num - 1) * viewHeight;
     });
 
-    // Refresh the active index when scrolling
-    document.body.onscroll = () => {
-        console.log('scrolled');
+    let refreshCurrentIndex = () => {
         let viewHeight = calcViewHeight();
         let currentTop = document.body.scrollTop;
         let newPageNum = Math.floor(currentTop / viewHeight) + 1;
         if (newPageNum !== jpage.currentPage) {
             jpage.setCurrentPage(newPageNum);
         }
+    }
 
+    // Refresh the active index when scrolling
+    document.body.onscroll = () => {
+        refreshCurrentIndex();
     };
 
     // Reflow the work after the window resized.
     window.onresize = () => {
-        console.log('resized');
         resizeContentHeight();
         let pageCount = calcPageCount();
         jpage.setPageCount(pageCount);
-        // Then trigger body's onscroll
+        refreshCurrentIndex();
     };
 })(typeof window !== 'undefined' ? window : this);

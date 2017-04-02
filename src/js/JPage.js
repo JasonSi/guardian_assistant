@@ -21,27 +21,33 @@
 
         _initTasks() {
             this._initUI();
-            this._initAttr();
             this._initListener();
         }
 
         _initUI() {
             let prevBtn = '<div class="jpage-prev">《</div>',
                 nextBtn = '<div class="jpage-next">》</div>',
-                pagesBtn = '<div class="jpage-indexes-container">';
-            for (let i = 0; i < this.pageCount; i++) {
-                pagesBtn += `<div class="jpage-index" data-index="${i + 1}">${i + 1}</div>`;
-            }
-            pagesBtn += '</div>';
+                pagesBtn = '<div class="jpage-indexes-container"></div>';
 
             let container = '<div class="jpage-container">' + prevBtn + pagesBtn + nextBtn + '</div>';
             this.btnContainer.innerHTML = container;
+
+            this._initAttr();
+            this._refreshIndexes();
         }
 
         _initAttr() {
-            this.indexesContainer = this.btnContainer.querySelector('.jpage-container');
+            this.indexesContainer = this.btnContainer.querySelector('.jpage-indexes-container');
             this.prevBtn = this.btnContainer.querySelector('.jpage-prev');
             this.nextBtn = this.btnContainer.querySelector('.jpage-next');
+        }
+
+        _refreshIndexes() {
+            let indexBtns = '';
+            for (let i = 0; i < this.pageCount; i++) {
+                indexBtns += `<div class="jpage-index" data-index="${i + 1}">${i + 1}</div>`;
+            }
+            this.indexesContainer.innerHTML = indexBtns;
         }
 
         _initListener() {
@@ -87,10 +93,14 @@
             let active = ' jpage-active';
             let indexes = this.indexesContainer.querySelectorAll('.jpage-index');
             indexes.forEach((e) => {
-              let dataIndex = parseInt(e.getAttribute('data-index'));
+                let dataIndex = parseInt(e.getAttribute('data-index'));
                 if (dataIndex === this.currentPage) {
                     if (!e.className.includes(active)) {
                         e.className += active;
+
+                        // Center the active index
+                        let eOffset = (dataIndex - 0.5) * e.clientWidth;
+                        e.parentNode.scrollLeft = eOffset - 0.5 * e.parentNode.clientWidth;
                     }
                 } else {
                     if (e.className.includes(active)) {
@@ -113,9 +123,11 @@
             this.currentPage = cPage;
             this._refreshUI();
         }
+
         setPageCount(pCount) {
             this.pageCount = pCount;
-            // TODO: Change UI
+            this._refreshIndexes();
+            this._refreshUI();
         }
 
     }
