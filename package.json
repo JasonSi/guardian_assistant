@@ -25,5 +25,8 @@
     "gulp-watch": "^4.3.11",
     "jshint": "^2.9.4",
     "jshint-stylish": "^2.2.1"
+  },
+  "dependencies": {
+    "smoothscroll-polyfill": "^0.3.4"
   }
 }

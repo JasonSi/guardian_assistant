@@ -1,5 +1,6 @@
 ((global, undefined) => {
     let JPage = require('./JPage');
+    require('smoothscroll-polyfill').polyfill();
 
     let pureContainer = document.querySelector("div.pure-container"),
         pureContent = document.querySelector("div.pure-content"),
@@ -30,33 +31,45 @@
         return Math.round((contentHeight - btnHeight) / calcViewHeight());
     };
 
-    resizeContentHeight();
-    let jpage = new JPage(btnContainer, calcPageCount());
+    let calcCurrentPage = () => {
+        let viewHeight = calcViewHeight(),
+            currentTop = document.body.scrollTop;
+        return Math.floor(currentTop / viewHeight) + 1;
+    };
 
-    jpage.onchange((num) => {
-        let viewHeight = calcViewHeight();
-        document.body.scrollTop = (num - 1) * viewHeight;
-    });
+    resizeContentHeight();
+    let jpage = new JPage(btnContainer, calcPageCount(), calcCurrentPage());
 
     let refreshCurrentIndex = () => {
-        let viewHeight = calcViewHeight();
-        let currentTop = document.body.scrollTop;
-        let newPageNum = Math.floor(currentTop / viewHeight) + 1;
+        let newPageNum = calcCurrentPage();
         if (newPageNum !== jpage.currentPage) {
             jpage.setCurrentPage(newPageNum);
         }
-    }
+    };
+
+    // Maybe it's in the somewhere middle of the page
+    refreshCurrentIndex();
+
+    // Scroll to specified place when click the following buttons for pagination
+    jpage.onchange((num) => {
+        let viewHeight = calcViewHeight();
+        let targetScrollTop = (num - 1) * viewHeight;
+        window.scroll({
+            top: targetScrollTop,
+            left: 0,
+            behavior: 'smooth'
+        });
+    });
 
     // Refresh the active index when scrolling
-    document.body.onscroll = () => {
+    document.addEventListener('scroll', () => {
         refreshCurrentIndex();
-    };
+    });
 
     // Reflow the work after the window resized.
-    window.onresize = () => {
+    window.addEventListener('resize', () => {
         resizeContentHeight();
-        let pageCount = calcPageCount();
-        jpage.setPageCount(pageCount);
+        jpage.setPageCount(calcPageCount());
         refreshCurrentIndex();
-    };
+    });
 })(typeof window !== 'undefined' ? window : this);

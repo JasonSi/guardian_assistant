@@ -12,10 +12,10 @@
          * @param {string} btnContainer The pagination buttons container DOM Node.
          * @param {string} PageCount As it's name.
          */
-        constructor(btnContainer, PageCount) {
+        constructor(btnContainer, pageCount, currentPage = 1) {
             this.btnContainer = btnContainer;
-            this.pageCount = PageCount;
-            this.currentPage = 1; // TODO: get this value automatically
+            this.pageCount = pageCount;
+            this.currentPage = currentPage;
             this._initTasks();
         }
 
@@ -34,6 +34,7 @@
 
             this._initAttr();
             this._refreshIndexes();
+            this._refreshUI();
         }
 
         _initAttr() {
