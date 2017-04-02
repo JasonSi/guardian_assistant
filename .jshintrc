@@ -1,4 +1,10 @@
 {
-  "indent": 4,
-  "esversion": 6
+    "indent": 4,
+    "browser": true,
+    "browserify": true,
+    "devel": true,
+    "esversion": 6,
+    "unused": true,
+    "undef": true,
+    "eqeqeq": true
 }

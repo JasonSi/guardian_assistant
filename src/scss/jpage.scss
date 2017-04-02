@@ -1,0 +1,45 @@
+$common-height: 80px;
+$common-width: 80px;
+$max-width: 600px;
+
+.jpage-container{
+  width: 100%;
+  max-width: $max-width;
+  height: $common-height;
+  line-height: $common-height;
+  display: flex;
+  margin: 0 auto;
+  .jpage-prev, .jpage-next{
+    display: inline-block;
+    flex: none;
+    width: $common-width;
+    height: $common-height;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover{
+      background-color: #eee;
+    }
+  }
+  .jpage-indexes-container{
+    flex:1;
+    overflow-x: scroll;
+    display: flex;
+    flex-wrap: nowrap;
+    .jpage-index{
+      width: $max-width - ($common-width * 2);
+      min-width: $common-width;
+      height: $common-height;
+      text-align: center;
+      cursor: pointer;
+
+      &:hover{
+        background-color: #eee;
+      }
+
+      &.jpage-active{
+        background-color: rgba(208, 231, 76, 0.71);
+      }
+    }
+  }
+}

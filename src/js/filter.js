@@ -12,11 +12,11 @@
     let article = document.getElementById('article');
 
     // Pluck expected parts from the page
-    let img = article.querySelector(".content__main figure");
-    let header = article.querySelector(".content__headline");
-    let content = article.querySelector(".content__article-body");
-    let newPage = document.createElement('div');
-    let newContainer = document.createElement('div');
+    let img = article.querySelector(".content__main figure"),
+        header = article.querySelector(".content__headline"),
+        content = article.querySelector(".content__article-body"),
+        newPage = document.createElement('div'),
+        newContainer = document.createElement('div');
 
     // Append the title and content
     newPage.appendChild(img);
@@ -47,9 +47,9 @@
         "div.js-ad-slot"
     ];
 
-    // select the target node
+    // HACK: select the target node
     let target = document.querySelector('.content__article-body');
-    let observer = new MutationObserver((mutations) => {
+    let observer = new MutationObserver(() => {
         removeDomByList(SomethingTough);
     });
 

@@ -1,26 +1,35 @@
 var gulp = require('gulp'),
-    jshint = require('gulp-jshint'),
     concat = require('gulp-concat'),
     babel = require('gulp-babel'),
     uglify = require('gulp-uglify'),
-    sass = require('gulp-sass'),
-    del = require('del'),
-    svg2png = require('gulp-svg2png'),
+    jshint = require('gulp-jshint'),
     stylish = require('jshint-stylish'),
+    browserify = require('gulp-browserify'),
+
+    sass = require('gulp-sass'),
+    autoprefixer = require('gulp-autoprefixer'),
     minifyCSS = require('gulp-minify-css'),
+
+    svg2png = require('gulp-svg2png'),
+    del = require('del'),
     watch = require('gulp-watch');
 
 gulp.task('js', function() {
-    return gulp.src(['./src/js/filter.js','./src/js/pagination.js'])
+    return gulp.src(['./src/js/filter.js','./src/js/JPage.js','./src/js/pagination.js'])
       .pipe(concat('app.js'))
       .pipe(babel({presets: ['es2015']}))
-      .pipe(uglify())
+      .pipe(browserify())
+      // .pipe(uglify())
       .pipe(gulp.dest('./dist/js/'));
 });
 gulp.task('scss', function() {
     return gulp.src('./src/scss/*.scss')
     .pipe(concat('index.css'))
     .pipe(sass())
+    .pipe(autoprefixer({
+        browsers: ['last 2 versions'],
+        cascade: false
+    }))
     .pipe(minifyCSS())
     .pipe(gulp.dest('./dist/css/'));
 });
@@ -42,7 +51,11 @@ gulp.task('bundle', ['js', 'scss', 'img', 'manifest']);
 gulp.task('rebundle', ['clean', 'bundle']);
 
 gulp.task('default', ['bundle'], function() {
-    gulp.watch('./src/**', ['bundle']);
+    gulp.watch('./src/js/*.js',['js']);
+    gulp.watch('./src/scss/*.scss',['scss']);
+    gulp.watch('./src/img/*.svg',['img']);
+    gulp.watch('./src/manifest.json',['manifest']);
+    // gulp.watch('./src/**', ['bundle']);
 });
 
 gulp.task('hint', function(){
