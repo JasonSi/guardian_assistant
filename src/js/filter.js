@@ -1,13 +1,5 @@
 ((global, undefined) => {
 
-    let removeDomByList = (list) => {
-        if(list.join === undefined){
-          list = [];
-        }
-        document.querySelectorAll(list.join(", ")).forEach((ele) => {
-            ele.remove();
-        });
-    };
 
     let article = document.getElementById('article');
 
@@ -32,6 +24,15 @@
     document.body.innerHTML = '';
     document.body.appendChild(newContainer);
 
+
+    let removeDomByList = (list) => {
+        if (list.join === undefined) {
+            list = [];
+        }
+        document.querySelectorAll(list.join(", ")).forEach((ele) => {
+            ele.remove();
+        });
+    };
     // Dirties in content body.
     const SomethingBad = [
         "aside.element-rich-link", // Aside ads
@@ -47,20 +48,30 @@
         "div.js-ad-slot"
     ];
 
-    // HACK: select the target node
+    // HACK: Remove ads and redundant content by observing mutation
     let target = document.querySelector('.content__article-body');
-    let observer = new MutationObserver(() => {
+    let articleObserver = new MutationObserver(() => {
         removeDomByList(SomethingTough);
     });
 
-    // configuration of the observer:
-    let config = {
-        childList: true,
-        characterData: true
+    articleObserver.observe(target, {
+      childList: true
+    });
+
+    let removeExceptClassName = (className) => {
+        document.body.childNodes.forEach((e) => {
+            if (!e.className.includes(className)) {
+                e.remove();
+            }
+        });
     };
 
-    // pass in the target node, as well as the observer options
-    observer.observe(target, config);
+    let bodyObserver = new MutationObserver(() => {
+        removeExceptClassName("pure-container");
+    });
 
+    bodyObserver.observe(document.body, {
+        childList: true
+    });
 
 })(typeof window !== 'undefined' ? window : this);
