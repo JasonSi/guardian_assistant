@@ -25,11 +25,15 @@
         }
 
         _initUI() {
-            let prevBtn = '<div class="jpage-prev">《</div>',
-                nextBtn = '<div class="jpage-next">》</div>',
+            let homeBtn = '<div class="jpage-home">&lt;&lt;</div>',
+                prevBtn = '<div class="jpage-prev">&lt;</div>',
+                nextBtn = '<div class="jpage-next">&gt;</div>',
+                endBtn = '<div class="jpage-end">&gt;&gt;</div>',
                 pagesBtn = '<div class="jpage-indexes-container"></div>';
 
-            let container = '<div class="jpage-container">' + prevBtn + pagesBtn + nextBtn + '</div>';
+            let container = '<div class="jpage-container">' +
+                homeBtn + prevBtn + pagesBtn + nextBtn + endBtn +
+                '</div>';
             this.btnContainer.innerHTML = container;
 
             this._initAttr();
@@ -39,8 +43,10 @@
 
         _initAttr() {
             this.indexesContainer = this.btnContainer.querySelector('.jpage-indexes-container');
+            this.homeBtn = this.btnContainer.querySelector('.jpage-home');
             this.prevBtn = this.btnContainer.querySelector('.jpage-prev');
             this.nextBtn = this.btnContainer.querySelector('.jpage-next');
+            this.endBtn = this.btnContainer.querySelector('.jpage-end');
         }
 
         _refreshIndexes() {
@@ -53,7 +59,6 @@
 
         _initListener() {
             this.prevBtn.addEventListener('click', () => {
-                console.log('prev clicked:', this.currentPage, this.pageCount);
                 if (this.currentPage > 1) {
                     this._jumpPage(this.currentPage - 1);
                 } else if (this.currentPage === 1) {
@@ -62,20 +67,32 @@
             });
 
             this.nextBtn.addEventListener('click', () => {
-                console.log('next clicked:', this.currentPage, this.pageCount);
                 if (this.currentPage < this.pageCount) {
                     this._jumpPage(this.currentPage + 1);
+                }
+            });
+
+            this.homeBtn.addEventListener('click', () => {
+                if (this.currentPage !== 1) {
+                    this._jumpPage(1);
+                }
+            });
+
+            this.endBtn.addEventListener('click', () => {
+                if (this.currentPage !== this.pageCount) {
+                    this._jumpPage(this.pageCount);
                 }
             });
 
             this.indexesContainer.addEventListener('click', (e) => {
                 // Manual Event Delegation
                 let target = e.target;
-                while (!target.className.includes('jpage-index') && target !== this.indexesContainer) {
+                while (!target.className.split(' ').includes('jpage-index') && target !== this.indexesContainer) {
                     target = target.parentNode;
                 }
-                if (target.className.indexOf('jpage-index') !== -1) {
+                if (target.className.split(' ').indexOf('jpage-index') !== -1) {
                     let tIndex = parseInt(target.getAttribute("data-index"));
+                    console.log(tIndex);
                     this._jumpPage(tIndex);
                 }
             });

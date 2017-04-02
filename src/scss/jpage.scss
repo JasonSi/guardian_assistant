@@ -1,5 +1,5 @@
-$common-height: 80px;
-$common-width: 80px;
+$common-height: 50px;
+$common-width: 50px;
 $max-width: 600px;
 $common-transition: all 0.5s;
 
@@ -11,6 +11,8 @@ $common-transition: all 0.5s;
     display: flex;
     margin: 0 auto;
 
+    .jpage-end,
+    .jpage-home,
     .jpage-next,
     .jpage-prev {
         display: inline-block;
@@ -23,7 +25,7 @@ $common-transition: all 0.5s;
         transition: $common-transition;
 
         &:hover {
-            background-color: #eee;
+            background-color: rgba(208, 208, 208, 0.9);
         }
     }
 
@@ -34,20 +36,21 @@ $common-transition: all 0.5s;
         flex-wrap: nowrap;
 
         .jpage-index {
-            width: $max-width - ($common-width * 2);
             min-width: $common-width;
+            width: $common-width;
             height: $common-height;
             text-align: center;
             cursor: pointer;
             user-select: none;
             transition: $common-transition;
+            margin: 0 auto;
 
             &:hover {
                 background-color: #eee;
             }
 
             &.jpage-active {
-                background-color: rgba(227, 59, 59, 0.79);
+                background-color: rgba(222, 60, 60, 0.8);
             }
         }
     }
