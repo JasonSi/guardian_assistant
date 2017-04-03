@@ -9,7 +9,8 @@
         "default_icon": "images/logo.png"
     },
     "permissions": [
-        "https://www.theguardian.com/"
+        "https://www.theguardian.com/",
+        "https://api.shanbay.com/"
     ],
     "content_scripts": [{
         "matches": ["http://www.theguardian.com/*", "https://www.theguardian.com/*"],

@@ -9,8 +9,8 @@
         /**
          * Constructor
          *
-         * @param {string} btnContainer The pagination buttons container DOM Node.
-         * @param {string} PageCount As it's name.
+         * @param {node} btnContainer The pagination buttons container DOM Node.
+         * @param {number} PageCount As it's name.
          */
         constructor(btnContainer, pageCount, currentPage = 1) {
             this.btnContainer = btnContainer;
@@ -92,7 +92,6 @@
                 }
                 if (target.className.split(' ').indexOf('jpage-index') !== -1) {
                     let tIndex = parseInt(target.getAttribute("data-index"));
-                    console.log(tIndex);
                     this._jumpPage(tIndex);
                 }
             });
