@@ -1,25 +1,25 @@
-.jmodal-container{
-  background-color: #eee;
-  border: 1px solid #209e85;
-  min-width: 200px;
-  // display: none;
-  position: absolute;
-  border-radius: 2px;
-  top: 200px;
-  left: 50px;
+.jmodal-container {
+    background-color: #eee;
+    border: 1px solid #209e85;
+    min-width: 200px;
+    display: none;
+    position: absolute;
+    border-radius: 2px;
+    top: 200px;
+    left: 50px;
 
-  .jmodal-header{
-    height: 30px;
-    line-height: 30px;
-    background-color: #209e85;
-  }
-  .jmodal-content{
+    .jmodal-header {
+        height: 30px;
+        line-height: 30px;
+        background-color: #209e85;
+    }
 
-  }
-  .jmodal-footer{
-    height: 30px;
-    line-height: 30px;
-    text-align: right;
-    font-size: 12px;
-  }
+    .jmodal-content {}
+
+    .jmodal-footer {
+        height: 30px;
+        line-height: 30px;
+        text-align: right;
+        font-size: 12px;
+    }
 }

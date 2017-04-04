@@ -53,6 +53,8 @@
             if (word) {
                 console.log(word);
                 jmodal.popup(word);
+            } else {
+                jmodal.hide();
             }
         })
     }
