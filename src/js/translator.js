@@ -10,7 +10,7 @@
          */
 
         let getWordAtPoint = (elem, x, y) => {
-            if (elem.nodeType == elem.TEXT_NODE) {
+            if (elem.nodeType === elem.TEXT_NODE) {
                 let range = elem.ownerDocument.createRange();
                 range.selectNodeContents(elem);
                 let currentPos = 0;
@@ -23,7 +23,7 @@
                         range.expand("word");
                         let ret = range.toString();
                         range.detach();
-                        return (ret.trim());
+                        return (ret.trim().replace(/\.|,/,''));
                     }
                     currentPos += 1;
                 }
@@ -41,7 +41,7 @@
                 }
             }
             return (null);
-        }
+        };
 
         let JModal = require('./jmodal');
         let container = document.querySelector('.pure-container');
@@ -52,12 +52,12 @@
             let word = getWordAtPoint(e.target, e.x, e.y);
             if (word) {
                 console.log(word);
-                jmodal.popup(word);
+                jmodal.popup(word, e.x, e.y);
             } else {
                 jmodal.hide();
             }
-        })
-    }
+        });
+    };
 
 
     if (typeof module === 'object' && typeof module.exports === 'object') {

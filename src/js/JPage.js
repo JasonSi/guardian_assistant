@@ -25,10 +25,10 @@
         }
 
         _initUI() {
-            let homeBtn = '<div class="jpage-home">&lt;&lt;</div>',
-                prevBtn = '<div class="jpage-prev">&lt;</div>',
-                nextBtn = '<div class="jpage-next">&gt;</div>',
-                endBtn = '<div class="jpage-end">&gt;&gt;</div>',
+            let homeBtn = '<div class="jpage-home" role="button" aria-label="Home Page">&lt;&lt;</div>',
+                prevBtn = '<div class="jpage-prev" role="button" aria-label="Previous Page">&lt;</div>',
+                nextBtn = '<div class="jpage-next" role="button" aria-label="Next Page">&gt;</div>',
+                endBtn = '<div class="jpage-end" role="button" aria-label="End Page">&gt;&gt;</div>',
                 pagesBtn = '<div class="jpage-indexes-container"></div>';
 
             let container = '<div class="jpage-container">' +
@@ -52,7 +52,7 @@
         _refreshIndexes() {
             let indexBtns = '';
             for (let i = 0; i < this.pageCount; i++) {
-                indexBtns += `<div class="jpage-index" data-index="${i + 1}">${i + 1}</div>`;
+                indexBtns += `<div class="jpage-index" data-index="${i + 1}" role="button" aria-label="Page ${i + 1}">${i + 1}</div>`;
             }
             this.indexesContainer.innerHTML = indexBtns;
         }

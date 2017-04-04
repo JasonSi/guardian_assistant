@@ -73,7 +73,7 @@
             jpage.setPageCount(calcPageCount());
             refreshCurrentIndex();
         });
-    }
+    };
 
 
     if (typeof module === 'object' && typeof module.exports === 'object') {

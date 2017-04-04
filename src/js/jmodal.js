@@ -11,8 +11,8 @@
         } else {
             return 'https://' + url;
         }
-    }
-    
+    };
+
     /**
      * A class to build a pop-up box for translation.
      *
@@ -39,7 +39,7 @@
                     <div class="jmodal-content"></div>
                     <footer class="jmodal-footer">${footer}</footer>
                 </div>
-            `
+            `;
             this.container.insertAdjacentHTML('beforeend', modal);
             this.modalDiv = this.container.querySelector('.jmodal-container');
             this.contentDiv = this.container.querySelector('.jmodal-content');
@@ -54,7 +54,7 @@
             this.xhr = xhr;
             xhr.open("GET", "https://api.shanbay.com/bdc/search/?word=" + word, true);
             xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
+                if (xhr.readyState === 4) {
                     // console.log(typeof xhr.responseText);
                     // console.log(JSON.parse(xhr.responseText || '{}'));
                     if (xhr.responseText) {
@@ -62,12 +62,13 @@
                         console.log(json);
                         this._fillContent(json);
                     }
-                };
+                }
             };
             xhr.send();
         }
 
-        _refreshModal() {
+        _refreshModal(x, y) {
+            // Locate and display it
             this.modalDiv.style.display = 'block';
         }
 
@@ -75,24 +76,33 @@
             if (json.status_code === 0) {
                 // SUCCESS
                 let data = json.data;
+                let def = data.definition.split("\n").join('<br>');
                 let content = `
-                    <dl>
-                        <dt>单词</dt><dd>${data.content}</dd>
-                        <dt>定义</dt><dd>${data.definition}</dd>
-                        <dt>发音</dt>
-                            <dd>
-                                <audio class="jmodal-pron-uk" src="${url2https(data.us_audio)}"></audio>
-                                <audio class="jmodal-pron-uk" src="${url2https(data.uk_audio)}"></audio>
-                                <dt>美式</dt><dd>${data.pronunciations.us}</dd>
-                                <dt>英式</dt><dd>${data.pronunciations.uk}</dd>
-                            </dd>
-                    </dl>
-                `
+                    <div class="jmodal-word" aria-label="content">${data.content}</div>
+                    <div class="jmodal-def" aria-label="definition"><label>释义</label><p>${def}<p></div>
+                    <div class="jmodal-pron" aria-label="pronunciations">
+                        <label>读音</label>
+                        <audio class="jmodal-audio-us" src="${url2https(data.us_audio)}"></audio>
+                        <audio class="jmodal-audio-uk" src="${url2https(data.uk_audio)}"></audio>
+                        <div class="jmodal-pron-us">US: [${data.pronunciations.us}]</div>
+                        <div class="jmodal-pron-uk">UK: [${data.pronunciations.uk}]</div>
+                    </div>
+                `;
                 this.contentDiv.innerHTML = content;
             } else if (json.status_code === 1) {
                 // Invalid word
+                let res = json.msg.replace('未找到单词:', '未查询到结果:');
+                let content = `
+                    <div class="jmodal-word" aria-label="content">${res}</div>
+                `;
+                this.contentDiv.innerHTML = content;
             } else {
                 // Maybe some other errors
+                let res = "未知错误";
+                let content = `
+                    <div class="jmodal-word" aria-label="content">${res}</div>
+                `;
+                this.contentDiv.innerHTML = content;
             }
         }
 
@@ -105,9 +115,9 @@
             this.modalDiv.style.display = 'none';
         }
 
-        popup(word) {
+        popup(word, x, y) {
             this._queryWord(word);
-            this._refreshModal();
+            this._refreshModal(x, y);
         }
 
         hide() {
