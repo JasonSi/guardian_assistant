@@ -55,23 +55,42 @@
             xhr.open("GET", "https://api.shanbay.com/bdc/search/?word=" + word, true);
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4) {
-                    // console.log(typeof xhr.responseText);
-                    // console.log(JSON.parse(xhr.responseText || '{}'));
                     if (xhr.responseText) {
                         let json = JSON.parse(xhr.responseText);
-                        console.log(json);
                         this._fillContent(json);
                     }
                 }
             };
+            xhr.onerror = ()=>{
+                this._renderSimpleText("请求超时...");
+            };
             xhr.send();
         }
 
-        _refreshModal(x, y) {
+        _renderSimpleText(content){
+            let html = `<div class="jmodal-word" aria-label="content">${content}</div>`;
+            this.contentDiv.innerHTML = html;
+        }
+
+        _calcPosition(relativeX, relativeY){
+            console.log(relativeX, relativeY);
+            let x = 0, y = 0;
+            let currentTop = document.body.scrollTop;
+            // TODO: calculate
+            return {x, y};
+        }
+
+        _refreshModal(relativeX, relativeY) {
+            this._renderSimpleText("正在查询...");
+
             // Locate and display it
+            let {x, y} = this._calcPosition(relativeX, relativeY);
+            this.modalDiv.style.transform = `translate(${x}px, ${y}px)`;
+
             this.modalDiv.style.display = 'block';
         }
 
+        // Fill out the content when requested successfully
         _fillContent(json) {
             if (json.status_code === 0) {
                 // SUCCESS
@@ -89,20 +108,15 @@
                     </div>
                 `;
                 this.contentDiv.innerHTML = content;
+
             } else if (json.status_code === 1) {
                 // Invalid word
                 let res = json.msg.replace('未找到单词:', '未查询到结果:');
-                let content = `
-                    <div class="jmodal-word" aria-label="content">${res}</div>
-                `;
-                this.contentDiv.innerHTML = content;
+                this._renderSimpleText(res);
+
             } else {
                 // Maybe some other errors
-                let res = "未知错误";
-                let content = `
-                    <div class="jmodal-word" aria-label="content">${res}</div>
-                `;
-                this.contentDiv.innerHTML = content;
+                this._renderSimpleText("未知错误");
             }
         }
 
@@ -116,6 +130,7 @@
         }
 
         popup(word, x, y) {
+            // Somewhat risks: When the speed of network is faster than DOM thingy...
             this._queryWord(word);
             this._refreshModal(x, y);
         }

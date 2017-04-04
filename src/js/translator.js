@@ -23,7 +23,7 @@
                         range.expand("word");
                         let ret = range.toString();
                         range.detach();
-                        return (ret.trim().replace(/\.|,/,''));
+                        return (ret.trim().replace(/\W/,''));
                     }
                     currentPos += 1;
                 }
@@ -51,7 +51,6 @@
         article.addEventListener('click', (e) => {
             let word = getWordAtPoint(e.target, e.x, e.y);
             if (word) {
-                console.log(word);
                 jmodal.popup(word, e.x, e.y);
             } else {
                 jmodal.hide();
