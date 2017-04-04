@@ -61,30 +61,34 @@
                     }
                 }
             };
-            xhr.onerror = ()=>{
+            xhr.onerror = () => {
                 this._renderSimpleText("请求超时...");
             };
             xhr.send();
         }
 
-        _renderSimpleText(content){
+        _renderSimpleText(content) {
             let html = `<div class="jmodal-word" aria-label="content">${content}</div>`;
             this.contentDiv.innerHTML = html;
         }
 
-        _calcPosition(relativeX, relativeY){
+        _calcPosition(relativeX, relativeY) {
             console.log(relativeX, relativeY);
-            let x = 0, y = 0;
+            let x = 0,
+                y = 0;
             let currentTop = document.body.scrollTop;
             // TODO: calculate
-            return {x, y};
+            return {
+                x,
+                y
+            };
         }
 
         _refreshModal(relativeX, relativeY) {
             this._renderSimpleText("正在查询...");
 
             // Locate and display it
-            let {x, y} = this._calcPosition(relativeX, relativeY);
+            let { x, y } = this._calcPosition(relativeX, relativeY);
             this.modalDiv.style.transform = `translate(${x}px, ${y}px)`;
 
             this.modalDiv.style.display = 'block';
@@ -96,18 +100,24 @@
                 // SUCCESS
                 let data = json.data;
                 let def = data.definition.split("\n").join('<br>');
+                let imgSrc = chrome.runtime.getURL("images/speaker3.png");
                 let content = `
                     <div class="jmodal-word" aria-label="content">${data.content}</div>
                     <div class="jmodal-def" aria-label="definition"><label>释义</label><p>${def}<p></div>
                     <div class="jmodal-pron" aria-label="pronunciations">
                         <label>读音</label>
-                        <audio class="jmodal-audio-us" src="${url2https(data.us_audio)}"></audio>
-                        <audio class="jmodal-audio-uk" src="${url2https(data.uk_audio)}"></audio>
-                        <div class="jmodal-pron-us">US: [${data.pronunciations.us}]</div>
-                        <div class="jmodal-pron-uk">UK: [${data.pronunciations.uk}]</div>
+                        <div class="jmodal-pron-audio">
+                            <audio src="${url2https(data.us_audio)}"></audio>
+                            <img src="${imgSrc}"> US: [${data.pronunciations.us}]
+                        </div>
+                        <div class="jmodal-pron-audio">
+                            <audio src="${url2https(data.uk_audio)}"></audio>
+                            <img src="${imgSrc}"> UK: [${data.pronunciations.uk}]
+                        </div>
                     </div>
                 `;
                 this.contentDiv.innerHTML = content;
+                this._addSpeakerListener();
 
             } else if (json.status_code === 1) {
                 // Invalid word
@@ -118,6 +128,17 @@
                 // Maybe some other errors
                 this._renderSimpleText("未知错误");
             }
+        }
+
+        _addSpeakerListener() {
+            let speakers = this.modalDiv.querySelectorAll('.jmodal-pron-audio');
+            speakers.forEach((ele) => {
+                let audio = ele.querySelector('audio');
+                let img = ele.querySelector('img');
+                img.addEventListener('click', () => {
+                    audio.play();
+                })
+            })
         }
 
         _destroyModal() {

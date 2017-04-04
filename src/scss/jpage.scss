@@ -2,6 +2,7 @@ $common-height: 50px;
 $common-width: 50px;
 $max-width: 600px;
 $common-transition: all 0.5s;
+$primary-color: #209e85;
 
 .jpage-container {
     width: 100%;
@@ -50,7 +51,7 @@ $common-transition: all 0.5s;
             }
 
             &.jpage-active {
-                background-color: rgba(#209e85, 0.8);
+                background-color: rgba($primary-color, 0.8);
             }
         }
     }

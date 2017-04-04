@@ -1,9 +1,11 @@
-$common-color: #eee;
+$common-color: #e0e0e0;
 $common-padding: 0 10px;
+$primary-color: #209e85;
 
 .jmodal-container {
+    font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
     background-color: $common-color;
-    border: 1px solid #209e85;
+    border: 1px solid $primary-color;
     min-width: 200px;
     max-width: 300px;
     display: none;
@@ -15,7 +17,7 @@ $common-padding: 0 10px;
     .jmodal-header {
         height: 40px;
         line-height: 40px;
-        background-color: #209e85;
+        background-color: $primary-color;
         padding: $common-padding;
         color: $common-color;
     }
@@ -38,9 +40,18 @@ $common-padding: 0 10px;
         }
 
         .jmodal-pron {
-            .jmodal-pron-uk,
-            .jmodal-pron-us {
+            .jmodal-pron-audio {
                 padding: $common-padding;
+                line-height: 30px;
+                height: 30px;
+                font-size: 16px;
+
+                img {
+                    vertical-align: text-bottom;
+                    width: 16px;
+                    height: 16px;
+                    cursor: pointer;
+                }
             }
         }
     }
@@ -50,6 +61,9 @@ $common-padding: 0 10px;
         line-height: 30px;
         text-align: right;
         font-size: 12px;
+        color: #adadad;
+        text-shadow: 1px 1px 0 #eeeeee;
+        font-style: italic;
         padding: $common-padding;
     }
 }

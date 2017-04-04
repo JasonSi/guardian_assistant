@@ -68,7 +68,7 @@ gulp.task('rebundle', ['clean', 'bundle']);
 gulp.task('default', ['bundle'], function() {
     gulp.watch('./src/js/*.js', ['js']);
     gulp.watch('./src/scss/*.scss', ['scss']);
-    gulp.watch('./src/img/*.svg', ['img']);
+    gulp.watch('./src/images/*.svg', ['img']);
     gulp.watch('./src/manifest.json', ['manifest']);
     // gulp.watch('./src/**', ['bundle']);
 });
