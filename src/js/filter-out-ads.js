@@ -20,7 +20,6 @@
         newContainer.className = 'pure-container';
         newContainer.appendChild(newPage);
 
-        // TODO: For the time being, a voilent method to replace the content.
         document.body.innerHTML = '';
         document.body.appendChild(newContainer);
 

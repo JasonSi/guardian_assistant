@@ -48,8 +48,31 @@
             }
         };
 
-        // Maybe it's in the somewhere middle of the page
+        // Manully trigger it in case of being not at the top after reloaded
         refreshCurrentIndex();
+
+        // A simple throttle to improve the performance
+        let throttle = (func, wait, mustRun) => {
+            let timeout,
+                startTime = new Date();
+
+            return () => {
+                let context = this,
+                    args = arguments,
+                    currentTime = new Date();
+
+                clearTimeout(timeout);
+                // trigger the handler when time's out
+                if (currentTime - startTime >= mustRun) {
+                    func.apply(context, args);
+                    startTime = currentTime;
+                } else {
+                    // reset the timer if throttled
+                    timeout = setTimeout(func, wait);
+                }
+            };
+        };
+
 
         // Scroll to specified place when click the following buttons for pagination
         jpage.onchange((num) => {
@@ -63,16 +86,14 @@
         });
 
         // Refresh the active index when scrolling
-        document.addEventListener('scroll', () => {
-            refreshCurrentIndex();
-        });
+        window.addEventListener('scroll', throttle(refreshCurrentIndex, 200, 500));
 
-        // Reflow the work after the window resized.
-        window.addEventListener('resize', () => {
+        let refreshWhenResize = () => {
             resizeContentHeight();
             jpage.setPageCount(calcPageCount());
             refreshCurrentIndex();
-        });
+        };
+        window.addEventListener('resize', throttle(refreshWhenResize, 200, 500));
     };
 
 
