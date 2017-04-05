@@ -1,6 +1,7 @@
 ((global, undefined) => {
     let genPaginator = () => {
         let JPage = require('./jpage');
+        let throttle = require('./throttle');
         require('smoothscroll-polyfill').polyfill();
 
         let pureContainer = document.querySelector("div.pure-container"),
@@ -50,29 +51,6 @@
 
         // Manully trigger it in case of being not at the top after reloaded
         refreshCurrentIndex();
-
-        // A simple throttle to improve the performance
-        let throttle = (func, wait, mustRun) => {
-            let timeout,
-                startTime = new Date();
-
-            return () => {
-                let context = this,
-                    args = arguments,
-                    currentTime = new Date();
-
-                clearTimeout(timeout);
-                // trigger the handler when time's out
-                if (currentTime - startTime >= mustRun) {
-                    func.apply(context, args);
-                    startTime = currentTime;
-                } else {
-                    // reset the timer if throttled
-                    timeout = setTimeout(func, wait);
-                }
-            };
-        };
-
 
         // Scroll to specified place when click the following buttons for pagination
         jpage.onchange((num) => {

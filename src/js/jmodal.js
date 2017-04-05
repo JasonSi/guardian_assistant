@@ -25,11 +25,12 @@
          *
          * @param {node} container
          */
-        constructor(container) {
+        constructor(container, viewSize) {
             this.container = container;
             this.lastX = 0;
             this.lastY = 0;
             this.lastTop = 0;
+            this.viewSize = viewSize;
             this._initUI();
             this._initListener();
         }
@@ -90,37 +91,39 @@
                 y = 0;
             const PopupMargin = 15;
 
-            // FIXME: the screenHeight should exclude the paginator's height
             let currentTop = this.lastTop,
                 modalHeight = this.modalDiv.clientHeight,
                 modalWidth = this.modalDiv.clientWidth,
-                screenHeight = document.documentElement.clientHeight,
-                screenWidth = document.documentElement.clientWidth;
+                viewHeight = this.viewSize.height,
+                viewWidth = this.viewSize.width;
 
-            if (relativeY + modalHeight + PopupMargin <= screenHeight) {
+            if (relativeY + modalHeight + PopupMargin <= viewHeight) {
                 y = currentTop + relativeY + PopupMargin;
             } else if (modalHeight + PopupMargin <= relativeY) {
                 y = currentTop + relativeY - modalHeight - PopupMargin;
             } else {
                 // fallback to middle
-                y = currentTop + (screenHeight - modalHeight) / 2;
+                y = currentTop + (viewHeight - modalHeight) / 2;
             }
 
-            if (relativeX + modalWidth + PopupMargin <= screenWidth) {
+            if (relativeX + modalWidth + PopupMargin <= viewWidth) {
                 x = relativeX + PopupMargin;
             } else if (modalWidth + PopupMargin <= relativeX) {
                 x = relativeX - modalWidth - PopupMargin;
             } else {
-                x = (screenWidth - modalWidth) / 2;
+                x = (viewWidth - modalWidth) / 2;
             }
 
             return { x, y };
         }
 
         _popupModal() {
+            // HACK: because none display will get none size.
+            this.modalDiv.style.opacity = 0;
+            this.modalDiv.style.display = 'block';
             this._renderSimpleText("正在查询...");
             this._refreshPosition();
-            this.modalDiv.style.display = 'block';
+            this.modalDiv.style.opacity = 1;
         }
 
         _refreshPosition() {
@@ -196,6 +199,13 @@
 
         hide() {
             this._destroyModal();
+        }
+
+        setViewSize({ height, width }) {
+            this.viewSize = {
+                height,
+                width
+            };
         }
 
     }

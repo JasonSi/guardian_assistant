@@ -1,5 +1,6 @@
 ((global, undefined) => {
     let shanbayTranslator = () => {
+        let throttle = require('./throttle');
 
         /**
          * A simple implement for get words from clicking the page.
@@ -44,11 +45,20 @@
             return (null);
         };
 
+        let calcViewSize = () => {
+            let screenHeight = document.documentElement.clientHeight,
+                paginatorHeight = document.querySelector('.btn-container').clientHeight;
+            let height = screenHeight - paginatorHeight,
+                width = document.documentElement.clientWidth;
+            return { height, width };
+        };
+
         let JModal = require('./jmodal');
         let container = document.querySelector('.pure-container');
-        let jmodal = new JModal(container);
+        let jmodal = new JModal(container, calcViewSize());
 
         let article = document.querySelector('.pure-content');
+
         article.addEventListener('click', (e) => {
             let word = getWordAtPoint(e.target, e.x, e.y);
             if (word) {
@@ -57,6 +67,13 @@
                 jmodal.hide();
             }
         });
+
+        let refreshJModalViewSize = ()=>{
+            jmodal.setViewSize(calcViewSize());
+            jmodal.hide();
+        };
+
+        window.addEventListener('resize',throttle(refreshJModalViewSize, 100, 300));
     };
 
 
