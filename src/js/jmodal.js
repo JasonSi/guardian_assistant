@@ -27,7 +27,11 @@
          */
         constructor(container) {
             this.container = container;
+            this.lastX = 0;
+            this.lastY = 0;
+            this.lastTop = 0;
             this._initUI();
+            this._initListener();
         }
 
         _initUI() {
@@ -45,6 +49,12 @@
             this.contentDiv = this.container.querySelector('.jmodal-content');
         }
 
+        _initListener() {
+            window.addEventListener('resize', () => {
+                this._destroyModal();
+            });
+        }
+
         _queryWord(word) {
             if (this.xhr) {
                 // Abort the former xhr
@@ -58,6 +68,7 @@
                     if (xhr.responseText) {
                         let json = JSON.parse(xhr.responseText);
                         this._fillContent(json);
+                        this._refreshPosition();
                     }
                 }
             };
@@ -72,26 +83,49 @@
             this.contentDiv.innerHTML = html;
         }
 
-        _calcPosition(relativeX, relativeY) {
-            console.log(relativeX, relativeY);
+        _calcPosition() {
+            let relativeX = this.lastX,
+                relativeY = this.lastY;
             let x = 0,
                 y = 0;
-            let currentTop = document.body.scrollTop;
-            // TODO: calculate
-            return {
-                x,
-                y
-            };
+            const PopupMargin = 15;
+
+            // FIXME: the screenHeight should exclude the paginator's height
+            let currentTop = this.lastTop,
+                modalHeight = this.modalDiv.clientHeight,
+                modalWidth = this.modalDiv.clientWidth,
+                screenHeight = document.documentElement.clientHeight,
+                screenWidth = document.documentElement.clientWidth;
+
+            if (relativeY + modalHeight + PopupMargin <= screenHeight) {
+                y = currentTop + relativeY + PopupMargin;
+            } else if (modalHeight + PopupMargin <= relativeY) {
+                y = currentTop + relativeY - modalHeight - PopupMargin;
+            } else {
+                // fallback to middle
+                y = currentTop + (screenHeight - modalHeight) / 2;
+            }
+
+            if (relativeX + modalWidth + PopupMargin <= screenWidth) {
+                x = relativeX + PopupMargin;
+            } else if (modalWidth + PopupMargin <= relativeX) {
+                x = relativeX - modalWidth - PopupMargin;
+            } else {
+                x = (screenWidth - modalWidth) / 2;
+            }
+
+            return { x, y };
         }
 
-        _refreshModal(relativeX, relativeY) {
+        _popupModal() {
             this._renderSimpleText("正在查询...");
-
-            // Locate and display it
-            let { x, y } = this._calcPosition(relativeX, relativeY);
-            this.modalDiv.style.transform = `translate(${x}px, ${y}px)`;
-
+            this._refreshPosition();
             this.modalDiv.style.display = 'block';
+        }
+
+        _refreshPosition() {
+            let { x, y } = this._calcPosition();
+            this.modalDiv.style.transform = `translate(${x}px, ${y}px)`;
         }
 
         // Fill out the content when requested successfully
@@ -132,13 +166,14 @@
 
         _addSpeakerListener() {
             let speakers = this.modalDiv.querySelectorAll('.jmodal-pron-audio');
+
             speakers.forEach((ele) => {
                 let audio = ele.querySelector('audio');
                 let img = ele.querySelector('img');
                 img.addEventListener('click', () => {
                     audio.play();
-                })
-            })
+                });
+            });
         }
 
         _destroyModal() {
@@ -152,8 +187,11 @@
 
         popup(word, x, y) {
             // Somewhat risks: When the speed of network is faster than DOM thingy...
+            this.lastX = x;
+            this.lastY = y;
+            this.lastTop = document.body.scrollTop;
             this._queryWord(word);
-            this._refreshModal(x, y);
+            this._popupModal();
         }
 
         hide() {

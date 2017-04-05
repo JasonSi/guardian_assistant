@@ -9,6 +9,7 @@
          * @param {number} y the word's position of Y.
          */
 
+        // TODO: 'Range.expand()' is deprecated. Please use 'Selection.modify()' instead.
         let getWordAtPoint = (elem, x, y) => {
             if (elem.nodeType === elem.TEXT_NODE) {
                 let range = elem.ownerDocument.createRange();
