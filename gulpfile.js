@@ -18,7 +18,8 @@ var gulp = require('gulp'),
 
     svg2png = require('gulp-svg2png'),
     del = require('del'),
-    watch = require('gulp-watch');
+    watch = require('gulp-watch'),
+    rename = require("gulp-rename");
 
 
 gulp.task('js', function() {
@@ -48,9 +49,21 @@ gulp.task('scss', function() {
 });
 
 gulp.task('img', function() {
-    return gulp.src('./src/images/*.svg')
+    return gulp.src(['./src/images/*.svg', '!./src/images/icon.svg'])
         .pipe(svg2png())
         .pipe(gulp.dest('./dist/images/'));
+});
+
+gulp.task('icon', function() {
+    var src = gulp.src('./src/images/icon.svg');
+    var sizes = [16, 48, 128];
+    for(i of sizes){
+        src.pipe(svg2png({height:i, width:i}))
+        .pipe(rename({
+            suffix: i
+        }))
+        .pipe(gulp.dest('./dist/images/icons'));
+    }
 });
 
 gulp.task('manifest', function() {
@@ -62,15 +75,15 @@ gulp.task('clean', function() {
     del.sync(['./dist/**']);
 });
 
-gulp.task('bundle', ['js', 'scss', 'img', 'manifest']);
+gulp.task('bundle', ['js', 'scss', 'img', 'icon', 'manifest']);
 gulp.task('rebundle', ['clean', 'bundle']);
 
 gulp.task('default', ['bundle'], function() {
     gulp.watch('./src/js/*.js', ['js']);
     gulp.watch('./src/scss/*.scss', ['scss']);
     gulp.watch('./src/images/*.svg', ['img']);
+    gulp.watch('./src/images/icon.svg', ['icon']);
     gulp.watch('./src/manifest.json', ['manifest']);
-    // gulp.watch('./src/**', ['bundle']);
 });
 
 gulp.task('hint', function() {

@@ -32,7 +32,8 @@ $primary-color: #209e85;
 
     .jpage-indexes-container {
         flex: 1;
-        overflow-x: scroll;
+        overflow-x: auto;
+        overflow-y: hidden;
         display: flex;
         flex-wrap: nowrap;
 
